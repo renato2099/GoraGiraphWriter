@@ -1,0 +1,10 @@
+{
+  "type": "record",
+  "name": "Vertex",
+  "namespace": "org.apache.giraph.gora.generated",
+  "fields" : [
+    {"name": "vertexId", "type": "string"},
+    {"name": "value", "type": "float"},
+    {"name": "edges", "type": {"type": "map", "values": "string"}}
+  ]
+}
