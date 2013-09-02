@@ -19,14 +19,14 @@
 
 <gora-orm>
 
-  <keyspace name="graphGiraph">
+  <table name="graphGiraph">
     <family name="vertices"/>
-  </keyspace>
+  </table>
 
-  <class name="org.apache.giraph.gora.generated.Vertex" keyClass="java.lang.String" keyspace="graphGiraph">
+  <class name="org.apache.giraph.gora.generated.Vertex" keyClass="java.lang.String" table="graphGiraph">
     <field name="vertexId" family="vertices" qualifier="vertexId"/>
-    <field name="vertexValue" family="vertices" qualifier="vertexValue"/>
+    <field name="value" family="vertices" qualifier="value"/>
     <field name="edges" family="vertices" qualifier="edges"/>
   </class>
-  
+
 </gora-orm>

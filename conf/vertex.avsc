@@ -4,7 +4,7 @@
   "namespace": "org.apache.giraph.gora.generated",
   "fields" : [
     {"name": "vertexId", "type": "string"},
-    {"name": "value", "type": "float"},
+    {"name": "vertexValue", "type": "float"},
     {"name": "edges", "type": {"type": "map", "values": "string"}}
   ]
 }

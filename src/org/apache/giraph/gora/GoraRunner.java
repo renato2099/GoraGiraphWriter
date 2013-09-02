@@ -27,6 +27,7 @@ import org.apache.giraph.gora.utils.VertexUtils;
 //import org.apache.gora.dynamodb.query.DynamoDBKey;
 //import org.apache.gora.dynamodb.store.DynamoDBStore;
 import org.apache.gora.persistency.impl.PersistentBase;
+import org.apache.gora.query.Query;
 import org.apache.gora.query.Result;
 import org.apache.gora.store.DataStore;
 import org.apache.gora.store.DataStoreFactory;
@@ -62,14 +63,14 @@ public class GoraRunner<K, T extends PersistentBase> {
   /**
    * Maximum count of vertices.
    */
-  private static int MAX_VRTX_COUNT = 5;
+  private static int MAX_VRTX_COUNT = 5000;
 
   /**
    * @param args
    */
   public static void main(String[] args) {
 
-    String dsType = "cassandra";
+    String dsType = GoraUtils.HBASE_STORE;
     String dsName = "vertexStore";
     GoraRunner<String, Vertex> gr = new GoraRunner<String, Vertex>();
     
@@ -85,9 +86,24 @@ public class GoraRunner<K, T extends PersistentBase> {
     // Performing requests vertices's requests
     //gr.putRequests(dsName, VertexUtils.generateGraph(MAX_VRTX_COUNT));
     //gr.deleteRequests("simpsonStore", gr.createKey("bart.simpsone"));
-    gr.verify(gr.goraRead(dsName, null, null));
+    gr.verify(gr.goraRead(dsName, "1", "101"));
+    System.out.println(gr.getPartitionNumber(dsName));
   }
 
+  public int getPartitionNumber(String pDataStoreName) {
+    int partitionNumber = -1;
+    DataStore pDataStore = dataStores.get(pDataStoreName);
+    Query<K, T> query = pDataStore.newQuery();
+    query.setStartKey((K) "1");
+    query.setEndKey((K) "101");
+    try {
+      partitionNumber = pDataStore.getPartitions(query).size();
+    } catch (IOException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    return partitionNumber;
+  }
   /**
    * Read elements from a Gorian data store using a range query.
    * @param pDataStoreName
@@ -106,8 +122,11 @@ public class GoraRunner<K, T extends PersistentBase> {
    * @param pGraph
    */
   public void putRequests(String pDataStoreName, Map<K, T> pGraph){
-    System.out.println("Performing put requests for " + pDataStoreName);
+    System.out.println("Performing put requests for <" + pDataStoreName + ">");
     DataStore<K, T> dataStore = dataStores.get(pDataStoreName);
+    if (dataStore == null) {
+      System.out.println("El data store no está");
+    }
     for(K vrtxId : pGraph.keySet())
       dataStore.put(vrtxId, pGraph.get(vrtxId));
     dataStore.flush();

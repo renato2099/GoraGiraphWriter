@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Random;
-import java.util.UUID;
 
 import org.apache.avro.util.Utf8;
 import org.apache.giraph.gora.generated.Edge;
@@ -23,26 +22,44 @@ public class VertexUtils {
     Map<String, Vertex> genGraph = new HashMap<String, Vertex>();
     int iCntt = 0;
     while (iCntt < pVerticesCount) {
-      Vertex vrtx = createVertex(genGraph);
+      Vertex vrtx = createVertex(genGraph, pVerticesCount);
       genGraph.put(vrtx.getVertexId().toString(), vrtx);
       iCntt ++;
+      System.out.println("Vertex number = " + iCntt);
     }
     return genGraph;
   }
 
-  private static Vertex createVertex(Map<String, Vertex> pGraph){
-      Vertex vrtx = new Vertex();
-      vrtx.setVertexId(new Utf8(UUID.randomUUID().toString()));
-      Random randomGenerator = new Random();
-      // add at most number of vertices created
-      int numEdges = pGraph.size()>0?randomGenerator.nextInt(pGraph.size()):0;
-      for (int iCnt = 0; iCnt < numEdges; iCnt ++){
-        // select a specific vertex
-        Edge tmpEdg = getValidEdge(vrtx,pGraph);
-        vrtx.putToEdges(tmpEdg.getVertexId(), new Utf8(String.valueOf(tmpEdg.getEdgeValue())));
+  private static String getValidVertexID(Map<String, Vertex> pGraph, int pMaxVertices){
+    int high = 15000, low = 0;
+    String vertexId = String.valueOf(low);
+    Random randomGenerator = new Random();
+    if (pGraph.size() != 0) {
+      while (pGraph.containsKey(vertexId)) {
+        vertexId = String.valueOf(randomGenerator.nextInt(high-low)+low);
       }
-      System.out.println(vrtx.toString());/**/
-      return vrtx;
+    }
+    else {
+      vertexId = "1";
+    }
+    System.out.println("VertexID escogido: " + vertexId);
+    return vertexId;
+  }
+
+  private static Vertex createVertex(Map<String, Vertex> pGraph, int pVerticesCount){
+    Random randomGenerator = new Random();
+    Vertex vrtx = new Vertex();
+    vrtx.setVertexId(new Utf8(getValidVertexID(pGraph, pVerticesCount)));
+    // add at most number of vertices created
+    int maxEdges = (int) (pGraph.size()*0.10);
+    int numEdges = maxEdges>0?randomGenerator.nextInt(maxEdges):0;
+    for (int iCnt = 0; iCnt < numEdges; iCnt ++){
+      // select a specific vertex
+      Edge tmpEdg = getValidEdge(vrtx,pGraph);
+      vrtx.putToEdges(tmpEdg.getVertexId(), new Utf8(String.valueOf(tmpEdg.getEdgeValue())));
+    }
+    /*System.out.println(vrtx.toString());*/
+    return vrtx;
   }
 
   /**
