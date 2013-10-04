@@ -16,7 +16,7 @@
  *limitations under the License.
  */
 
-package org.apache.giraph.gora.generated;
+package org.apache.giraph.io.gora.generated;
 
 import java.nio.ByteBuffer;
 import java.util.Map;
@@ -40,12 +40,11 @@ import org.apache.gora.persistency.StatefulHashMap;
 import org.apache.gora.persistency.ListGenericArray;
 
 @SuppressWarnings("all")
-public class Vertex extends PersistentBase {
-  public static final Schema _SCHEMA = Schema.parse("{\"type\":\"record\",\"name\":\"Vertex\",\"namespace\":\"org.apache.giraph.gora.generated\",\"fields\":[{\"name\":\"vertexId\",\"type\":\"string\"},{\"name\":\"value\",\"type\":\"float\"},{\"name\":\"edges\",\"type\":{\"type\":\"map\",\"values\":\"string\"}}]}");
+public class Edge extends PersistentBase {
+  public static final Schema _SCHEMA = Schema.parse("{\"type\":\"record\",\"name\":\"Edge\",\"namespace\":\"org.apache.giraph.gora.generated\",\"fields\":[{\"name\":\"vertexId\",\"type\":\"string\"},{\"name\":\"edgeValue\",\"type\":\"float\"}]}");
   public static enum Field {
     VERTEX_ID(0,"vertexId"),
-    VALUE(1,"value"),
-    EDGES(2,"edges"),
+    EDGE_VALUE(1,"edgeValue"),
     ;
     private int index;
     private String name;
@@ -54,29 +53,26 @@ public class Vertex extends PersistentBase {
     public String getName() {return name;}
     public String toString() {return name;}
   };
-  public static final String[] _ALL_FIELDS = {"vertexId","value","edges",};
+  public static final String[] _ALL_FIELDS = {"vertexId","edgeValue",};
   static {
-    PersistentBase.registerFields(Vertex.class, _ALL_FIELDS);
+    PersistentBase.registerFields(Edge.class, _ALL_FIELDS);
   }
   private Utf8 vertexId;
-  private float value;
-  private Map<Utf8,Utf8> edges;
-  public Vertex() {
+  private float edgeValue;
+  public Edge() {
     this(new StateManagerImpl());
   }
-  public Vertex(StateManager stateManager) {
+  public Edge(StateManager stateManager) {
     super(stateManager);
-    edges = new StatefulHashMap<Utf8,Utf8>();
   }
-  public Vertex newInstance(StateManager stateManager) {
-    return new Vertex(stateManager);
+  public Edge newInstance(StateManager stateManager) {
+    return new Edge(stateManager);
   }
   public Schema getSchema() { return _SCHEMA; }
   public Object get(int _field) {
     switch (_field) {
     case 0: return vertexId;
-    case 1: return value;
-    case 2: return edges;
+    case 1: return edgeValue;
     default: throw new AvroRuntimeException("Bad index");
     }
   }
@@ -86,8 +82,7 @@ public class Vertex extends PersistentBase {
     getStateManager().setDirty(this, _field);
     switch (_field) {
     case 0:vertexId = (Utf8)_value; break;
-    case 1:value = (Float)_value; break;
-    case 2:edges = (Map<Utf8,Utf8>)_value; break;
+    case 1:edgeValue = (Float)_value; break;
     default: throw new AvroRuntimeException("Bad index");
     }
   }
@@ -97,26 +92,10 @@ public class Vertex extends PersistentBase {
   public void setVertexId(Utf8 value) {
     put(0, value);
   }
-  public float getValue() {
+  public float getEdgeValue() {
     return (Float) get(1);
   }
-  public void setValue(float value) {
+  public void setEdgeValue(float value) {
     put(1, value);
-  }
-  public Map<Utf8, Utf8> getEdges() {
-    return (Map<Utf8, Utf8>) get(2);
-  }
-  public Utf8 getFromEdges(Utf8 key) {
-    if (edges == null) { return null; }
-    return edges.get(key);
-  }
-  public void putToEdges(Utf8 key, Utf8 value) {
-    getStateManager().setDirty(this, 2);
-    edges.put(key, value);
-  }
-  public Utf8 removeFromEdges(Utf8 key) {
-    if (edges == null) { return null; }
-    getStateManager().setDirty(this, 2);
-    return edges.remove(key);
   }
 }

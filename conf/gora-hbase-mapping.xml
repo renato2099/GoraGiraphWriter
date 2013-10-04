@@ -23,10 +23,30 @@
     <family name="vertices"/>
   </table>
 
-  <class name="org.apache.giraph.gora.generated.Vertex" keyClass="java.lang.String" table="graphGiraph">
+  <class name="org.apache.giraph.io.gora.generated.GVertex" keyClass="java.lang.String" table="graphGiraph">
     <field name="vertexId" family="vertices" qualifier="vertexId"/>
     <field name="value" family="vertices" qualifier="value"/>
     <field name="edges" family="vertices" qualifier="edges"/>
   </class>
 
+  <table name="graphGiraphResults">
+    <family name="vertices"/>
+  </table>
+
+  <class name="org.apache.giraph.io.gora.generated.GVertexResult" keyClass="java.lang.String" table="graphGiraphResults">
+    <field name="vertexId" family="vertices" qualifier="vertexId"/>
+    <field name="value" family="vertices" qualifier="value"/>
+    <field name="edges" family="vertices" qualifier="edges"/>
+  </class>
+
+	<table name="graphGiraphEdges">
+    <family name="edges"/>
+  </table>
+  <class name="org.apache.giraph.io.gora.generated.GEdge" keyClass="java.lang.String" table="graphGiraphEdges">
+    <field name="edgeId" family="edges" qualifier="edgeId"/>
+    <field name="edgeWeight" family="edges" qualifier="edgeWeight"/>
+    <field name="label" family="edges" qualifier="label"/>
+    <field name="vertexInId" family="edges" qualifier="vertexInId"/>
+    <field name="vertexOutId" family="edges" qualifier="vertexOutId"/>
+  </class>
 </gora-orm>

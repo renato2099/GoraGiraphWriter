@@ -21,9 +21,12 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.giraph.gora.generated.Vertex;
+import org.apache.giraph.gora.utils.EdgeUtils;
 import org.apache.giraph.gora.utils.GoraUtils;
 import org.apache.giraph.gora.utils.VertexUtils;
+import org.apache.giraph.io.gora.generated.GEdge;
+import org.apache.giraph.io.gora.generated.GVertex;
+import org.apache.gora.persistency.Persistent;
 //import org.apache.gora.dynamodb.query.DynamoDBKey;
 //import org.apache.gora.dynamodb.store.DynamoDBStore;
 import org.apache.gora.persistency.impl.PersistentBase;
@@ -63,7 +66,8 @@ public class GoraRunner<K, T extends PersistentBase> {
   /**
    * Maximum count of vertices.
    */
-  private static int MAX_VRTX_COUNT = 5000;
+  public static int MAX_VRTX_COUNT = 5;
+  public static int MAX_EDGE_COUNT = 5;
 
   /**
    * @param args
@@ -71,11 +75,14 @@ public class GoraRunner<K, T extends PersistentBase> {
   public static void main(String[] args) {
 
     String dsType = GoraUtils.HBASE_STORE;
-    String dsName = "vertexStore";
-    GoraRunner<String, Vertex> gr = new GoraRunner<String, Vertex>();
+    String dsVrtx = "vertexStore";
+    String dsEdge = "edgeStore";
+    GoraRunner gr = new GoraRunner<String, GVertex>();
     
     // Creating data stores
-    gr.addDataStore(dsName, dsType, String.class, Vertex.class);
+    gr.addDataStore(dsVrtx, dsType, String.class, GVertex.class);
+    gr.addDataStore(dsEdge, dsType, String.class, GEdge.class);
+ 
     /**
      * [0,0,[[1,1],[3,3]]]
 [1,0,[[0,1],[2,2],[3,1]]]
@@ -85,9 +92,10 @@ public class GoraRunner<K, T extends PersistentBase> {
      */
     // Performing requests vertices's requests
     //gr.putRequests(dsName, VertexUtils.generateGraph(MAX_VRTX_COUNT));
+    gr.putRequests(dsEdge, EdgeUtils.generateGraph(MAX_EDGE_COUNT));
     //gr.deleteRequests("simpsonStore", gr.createKey("bart.simpsone"));
-    gr.verify(gr.goraRead(dsName, "1", "101"));
-    System.out.println(gr.getPartitionNumber(dsName));
+    gr.verify(gr.goraRead(dsEdge, "0", "10"));
+    System.out.println(gr.getPartitionNumber(dsEdge));
   }
 
   public int getPartitionNumber(String pDataStoreName) {
@@ -140,8 +148,8 @@ public class GoraRunner<K, T extends PersistentBase> {
     if (pResults != null){
       try {
         while (pResults.next()){
-          Vertex vrtx = (Vertex)pResults.get();
-          System.out.println(vrtx);
+          //GVertex vrtx = (GVertex)pResults.get();
+          System.out.println(pResults.get().toString());
         }
       } catch (IOException e) {
         System.out.println("Error verifying data input.");

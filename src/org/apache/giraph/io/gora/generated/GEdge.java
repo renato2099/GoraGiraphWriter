@@ -16,7 +16,7 @@
  *limitations under the License.
  */
 
-package org.apache.giraph.gora.generated;
+package org.apache.giraph.io.gora.generated;
 
 import java.nio.ByteBuffer;
 import java.util.Map;
@@ -40,11 +40,14 @@ import org.apache.gora.persistency.StatefulHashMap;
 import org.apache.gora.persistency.ListGenericArray;
 
 @SuppressWarnings("all")
-public class Edge extends PersistentBase {
-  public static final Schema _SCHEMA = Schema.parse("{\"type\":\"record\",\"name\":\"Edge\",\"namespace\":\"org.apache.giraph.gora.generated\",\"fields\":[{\"name\":\"vertexId\",\"type\":\"string\"},{\"name\":\"edgeValue\",\"type\":\"float\"}]}");
+public class GEdge extends PersistentBase {
+  public static final Schema _SCHEMA = Schema.parse("{\"type\":\"record\",\"name\":\"GEdge\",\"namespace\":\"org.apache.giraph.gora.generated\",\"fields\":[{\"name\":\"edgeId\",\"type\":\"string\"},{\"name\":\"edgeWeight\",\"type\":\"float\"},{\"name\":\"vertexInId\",\"type\":\"string\"},{\"name\":\"vertexOutId\",\"type\":\"string\"},{\"name\":\"label\",\"type\":\"string\"}]}");
   public static enum Field {
-    VERTEX_ID(0,"vertexId"),
-    EDGE_VALUE(1,"edgeValue"),
+    EDGE_ID(0,"edgeId"),
+    EDGE_WEIGHT(1,"edgeWeight"),
+    VERTEX_IN_ID(2,"vertexInId"),
+    VERTEX_OUT_ID(3,"vertexOutId"),
+    LABEL(4,"label"),
     ;
     private int index;
     private String name;
@@ -53,26 +56,32 @@ public class Edge extends PersistentBase {
     public String getName() {return name;}
     public String toString() {return name;}
   };
-  public static final String[] _ALL_FIELDS = {"vertexId","edgeValue",};
+  public static final String[] _ALL_FIELDS = {"edgeId","edgeWeight","vertexInId","vertexOutId","label",};
   static {
-    PersistentBase.registerFields(Edge.class, _ALL_FIELDS);
+    PersistentBase.registerFields(GEdge.class, _ALL_FIELDS);
   }
-  private Utf8 vertexId;
-  private float edgeValue;
-  public Edge() {
+  private Utf8 edgeId;
+  private float edgeWeight;
+  private Utf8 vertexInId;
+  private Utf8 vertexOutId;
+  private Utf8 label;
+  public GEdge() {
     this(new StateManagerImpl());
   }
-  public Edge(StateManager stateManager) {
+  public GEdge(StateManager stateManager) {
     super(stateManager);
   }
-  public Edge newInstance(StateManager stateManager) {
-    return new Edge(stateManager);
+  public GEdge newInstance(StateManager stateManager) {
+    return new GEdge(stateManager);
   }
   public Schema getSchema() { return _SCHEMA; }
   public Object get(int _field) {
     switch (_field) {
-    case 0: return vertexId;
-    case 1: return edgeValue;
+    case 0: return edgeId;
+    case 1: return edgeWeight;
+    case 2: return vertexInId;
+    case 3: return vertexOutId;
+    case 4: return label;
     default: throw new AvroRuntimeException("Bad index");
     }
   }
@@ -81,21 +90,42 @@ public class Edge extends PersistentBase {
     if(isFieldEqual(_field, _value)) return;
     getStateManager().setDirty(this, _field);
     switch (_field) {
-    case 0:vertexId = (Utf8)_value; break;
-    case 1:edgeValue = (Float)_value; break;
+    case 0:edgeId = (Utf8)_value; break;
+    case 1:edgeWeight = (Float)_value; break;
+    case 2:vertexInId = (Utf8)_value; break;
+    case 3:vertexOutId = (Utf8)_value; break;
+    case 4:label = (Utf8)_value; break;
     default: throw new AvroRuntimeException("Bad index");
     }
   }
-  public Utf8 getVertexId() {
+  public Utf8 getEdgeId() {
     return (Utf8) get(0);
   }
-  public void setVertexId(Utf8 value) {
+  public void setEdgeId(Utf8 value) {
     put(0, value);
   }
-  public float getEdgeValue() {
+  public float getEdgeWeight() {
     return (Float) get(1);
   }
-  public void setEdgeValue(float value) {
+  public void setEdgeWeight(float value) {
     put(1, value);
+  }
+  public Utf8 getVertexInId() {
+    return (Utf8) get(2);
+  }
+  public void setVertexInId(Utf8 value) {
+    put(2, value);
+  }
+  public Utf8 getVertexOutId() {
+    return (Utf8) get(3);
+  }
+  public void setVertexOutId(Utf8 value) {
+    put(3, value);
+  }
+  public Utf8 getLabel() {
+    return (Utf8) get(4);
+  }
+  public void setLabel(Utf8 value) {
+    put(4, value);
   }
 }

@@ -9,29 +9,29 @@ import java.util.Map;
 import java.util.Random;
 
 import org.apache.avro.util.Utf8;
-import org.apache.giraph.gora.generated.Edge;
-import org.apache.giraph.gora.generated.Vertex;
+import org.apache.giraph.io.gora.generated.Edge;
+import org.apache.giraph.io.gora.generated.GVertex;
 
 /**
  * @author renatomarroquin
  *
  */
 public class VertexUtils {
-  public static Map<String, Vertex> generateGraph(int pVerticesCount){
+  public static Map<String, GVertex> generateGraph(int pVerticesCount){
     // Adding a new user
-    Map<String, Vertex> genGraph = new HashMap<String, Vertex>();
+    Map<String, GVertex> genGraph = new HashMap<String, GVertex>();
     int iCntt = 0;
     while (iCntt < pVerticesCount) {
-      Vertex vrtx = createVertex(genGraph, pVerticesCount);
+      GVertex vrtx = createVertex(genGraph, pVerticesCount);
       genGraph.put(vrtx.getVertexId().toString(), vrtx);
       iCntt ++;
-      System.out.println("Vertex number = " + iCntt);
+      System.out.println("GVertex number = " + iCntt);
     }
     return genGraph;
   }
 
-  private static String getValidVertexID(Map<String, Vertex> pGraph, int pMaxVertices){
-    int high = 15000, low = 0;
+  private static String getValidVertexID(Map<String, GVertex> pGraph, int pMaxVertices){
+    int high = 10, low = 0;
     String vertexId = String.valueOf(low);
     Random randomGenerator = new Random();
     if (pGraph.size() != 0) {
@@ -46,12 +46,12 @@ public class VertexUtils {
     return vertexId;
   }
 
-  private static Vertex createVertex(Map<String, Vertex> pGraph, int pVerticesCount){
+  private static GVertex createVertex(Map<String, GVertex> pGraph, int pVerticesCount){
     Random randomGenerator = new Random();
-    Vertex vrtx = new Vertex();
+    GVertex vrtx = new GVertex();
     vrtx.setVertexId(new Utf8(getValidVertexID(pGraph, pVerticesCount)));
     // add at most number of vertices created
-    int maxEdges = (int) (pGraph.size()*0.10);
+    int maxEdges = (int) (pGraph.size());//*0.10);
     int numEdges = maxEdges>0?randomGenerator.nextInt(maxEdges):0;
     for (int iCnt = 0; iCnt < numEdges; iCnt ++){
       // select a specific vertex
@@ -68,12 +68,12 @@ public class VertexUtils {
    * @param pGraph
    * @return
    */
-  private static Edge getValidEdge(Vertex pVertex, Map<String, Vertex> pGraph){
+  private static Edge getValidEdge(GVertex pVertex, Map<String, GVertex> pGraph){
     Edge edg = new Edge();
     Random randomGenerator = new Random();
-    Vertex vrtxEnd = null;
+    GVertex vrtxEnd = null;
     do{
-      vrtxEnd = ((Vertex)pGraph.values().toArray()[(randomGenerator.nextInt(pGraph.size()-1))]);
+      vrtxEnd = ((GVertex)pGraph.values().toArray()[(randomGenerator.nextInt(pGraph.size()-1))]);
     }while (!validateEdge(pVertex, vrtxEnd));
     Utf8 sinkVrtx = vrtxEnd.getVertexId();
     edg.setVertexId(new Utf8(sinkVrtx.toString()));
@@ -87,7 +87,7 @@ public class VertexUtils {
    * @param pVertexEnd
    * @return
    */
-  private static boolean validateEdge(Vertex pVertexBegin, Vertex pVertexEnd){
+  private static boolean validateEdge(GVertex pVertexBegin, GVertex pVertexEnd){
     Iterator<Utf8> it = pVertexBegin.getEdges().keySet().iterator();
     while (it.hasNext()){
       Utf8 tmpEdg = it.next();
