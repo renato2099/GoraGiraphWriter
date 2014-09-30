@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.avro.util.Utf8;
 import org.apache.giraph.gora.utils.EdgeUtils;
 import org.apache.giraph.gora.utils.GoraUtils;
 import org.apache.giraph.gora.utils.VertexUtils;
@@ -72,16 +73,17 @@ public class GoraRunner<K, T extends PersistentBase> {
   /**
    * @param args
    */
+  @SuppressWarnings({ "unchecked", "rawtypes" })
   public static void main(String[] args) {
 
     String dsType = GoraUtils.HBASE_STORE;
     String dsVrtx = "vertexStore";
     String dsEdge = "edgeStore";
-    GoraRunner gr = new GoraRunner<String, GVertex>();
+    GoraRunner gr = new GoraRunner();
     
     // Creating data stores
     gr.addDataStore(dsVrtx, dsType, String.class, GVertex.class);
-    gr.addDataStore(dsEdge, dsType, String.class, GEdge.class);
+    //gr.addDataStore(dsEdge, dsType, String.class, GEdge.class);
  
     /**
      * [0,0,[[1,1],[3,3]]]
@@ -91,11 +93,11 @@ public class GoraRunner<K, T extends PersistentBase> {
 [4,0,[[3,4],[2,4]]]
      */
     // Performing requests vertices's requests
-    //gr.putRequests(dsName, VertexUtils.generateGraph(MAX_VRTX_COUNT));
-    gr.putRequests(dsEdge, EdgeUtils.generateGraph(MAX_EDGE_COUNT));
+    gr.putRequests(dsVrtx, VertexUtils.createSimpleGraph());
+    //gr.putRequests(dsEdge, EdgeUtils.generateGraph(MAX_EDGE_COUNT));
     //gr.deleteRequests("simpsonStore", gr.createKey("bart.simpsone"));
-    gr.verify(gr.goraRead(dsEdge, "0", "10"));
-    System.out.println(gr.getPartitionNumber(dsEdge));
+    gr.verify(gr.goraRead(dsVrtx, null, null));
+    System.out.println(gr.getPartitionNumber(dsVrtx));
   }
 
   public int getPartitionNumber(String pDataStoreName) {
@@ -135,9 +137,13 @@ public class GoraRunner<K, T extends PersistentBase> {
     if (dataStore == null) {
       System.out.println("El data store no está");
     }
-    for(K vrtxId : pGraph.keySet())
-      dataStore.put(vrtxId, pGraph.get(vrtxId));
-    dataStore.flush();
+    else {
+      for(K vrtxId : pGraph.keySet()) {
+        System.out.println(pGraph.get(vrtxId).toString());
+        dataStore.put(vrtxId, pGraph.get(vrtxId)); 
+      }
+      dataStore.flush();
+    }
   }
 
   /**
@@ -176,8 +182,10 @@ public class GoraRunner<K, T extends PersistentBase> {
     this.dataStores = new HashMap<String, DataStore<K, T>>();
     try {
       dataStore = GoraUtils.createSpecificDataStore(dsName, dsType, pKeyClass, pValueClass);
-      if (dataStore != null)
+      if (dataStore != null) {
         dataStores.put(dsName, dataStore);
+        System.out.println("New data store has been created");
+      }
     } catch (GoraException e) {
       System.out.println("Error adding new data store");
       e.printStackTrace();

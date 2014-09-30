@@ -1,7 +1,7 @@
 {
   "type": "record",
-  "name": "Vertex",
-  "namespace": "org.apache.giraph.gora.generated",
+  "name": "GVertex",
+  "namespace": "org.apache.giraph.io.gora.generated",
   "fields" : [
     {"name": "vertexId", "type": "string"},
     {"name": "vertexValue", "type": "float"},

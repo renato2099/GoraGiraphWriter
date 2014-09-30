@@ -1,7 +1,7 @@
 {
   "type": "record",
   "name": "GEdge",
-  "namespace": "org.apache.giraph.gora.generated",
+  "namespace": "org.apache.giraph.io.gora.generated",
   "fields" : [
     {"name": "edgeId", "type": "string"},
     {"name": "edgeWeight", "type": "float"},

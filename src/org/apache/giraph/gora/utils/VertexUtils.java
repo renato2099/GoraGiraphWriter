@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.Random;
 
 import org.apache.avro.util.Utf8;
-import org.apache.giraph.io.gora.generated.Edge;
+import org.apache.giraph.io.gora.generated.GEdge;
 import org.apache.giraph.io.gora.generated.GVertex;
 
 /**
@@ -18,7 +18,6 @@ import org.apache.giraph.io.gora.generated.GVertex;
  */
 public class VertexUtils {
   public static Map<String, GVertex> generateGraph(int pVerticesCount){
-    // Adding a new user
     Map<String, GVertex> genGraph = new HashMap<String, GVertex>();
     int iCntt = 0;
     while (iCntt < pVerticesCount) {
@@ -30,6 +29,52 @@ public class VertexUtils {
     return genGraph;
   }
 
+  public static Map<String, GVertex> createSimpleGraph() {
+    Map<String, GVertex> genGraph = new HashMap<String, GVertex>();
+    /* Vertex 0 */
+    Utf8 id = new Utf8("0");
+    GVertex vrtx = new GVertex();
+    vrtx.setVertexId(id);
+    vrtx.putToEdges(new Utf8("1"), new Utf8("1"));
+    vrtx.putToEdges(new Utf8("3"), new Utf8("3"));
+    genGraph.put(id.toString(), vrtx);
+
+    /* Vertex 1 */
+    vrtx = new GVertex();
+    id = new Utf8("1");
+    vrtx.setVertexId(id);
+    vrtx.putToEdges(new Utf8("0"), new Utf8("1"));
+    vrtx.putToEdges(new Utf8("2"), new Utf8("2"));
+    vrtx.putToEdges(new Utf8("3"), new Utf8("1"));
+    genGraph.put(id.toString(), vrtx);
+
+    /* Vertex 2 */
+    vrtx = new GVertex();
+    id = new Utf8("2");
+    vrtx.setVertexId(id);
+    vrtx.putToEdges(new Utf8("1"), new Utf8("2"));
+    vrtx.putToEdges(new Utf8("4"), new Utf8("4"));
+    genGraph.put(id.toString(), vrtx);
+
+    /* Vertex 3 */
+    vrtx = new GVertex();
+    id = new Utf8("3");
+    vrtx.setVertexId(id);
+    vrtx.putToEdges(new Utf8("0"), new Utf8("3"));
+    vrtx.putToEdges(new Utf8("1"), new Utf8("1"));
+    vrtx.putToEdges(new Utf8("4"), new Utf8("4"));
+    genGraph.put(id.toString(), vrtx);
+
+    /* Vertex 4 */
+    vrtx = new GVertex();
+    id = new Utf8("4");
+    vrtx.setVertexId(id);
+    vrtx.putToEdges(new Utf8("3"), new Utf8("4"));
+    vrtx.putToEdges(new Utf8("2"), new Utf8("4"));
+    genGraph.put(id.toString(), vrtx);
+    
+    return genGraph;
+  }
   private static String getValidVertexID(Map<String, GVertex> pGraph, int pMaxVertices){
     int high = 10, low = 0;
     String vertexId = String.valueOf(low);
@@ -58,7 +103,7 @@ public class VertexUtils {
       Edge tmpEdg = getValidEdge(vrtx,pGraph);
       vrtx.putToEdges(tmpEdg.getVertexId(), new Utf8(String.valueOf(tmpEdg.getEdgeValue())));
     }
-    /*System.out.println(vrtx.toString());*/
+    /**/System.out.println(vrtx.toString());
     return vrtx;
   }
 

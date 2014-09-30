@@ -4,7 +4,6 @@
 package org.apache.giraph.gora.utils;
 
 import org.apache.gora.cassandra.store.CassandraStore;
-import org.apache.gora.hbase.store.HBaseStore;
 import org.apache.gora.persistency.Persistent;
 import org.apache.gora.query.Query;
 import org.apache.gora.query.Result;
@@ -52,9 +51,9 @@ public class GoraUtils {
     if (pDataStoreName.toLowerCase().equals(CASSANDRA_STORE)){
       return CassandraStore.class;
     }
-    if (pDataStoreName.toLowerCase().equals(HBASE_STORE)){
-      return HBaseStore.class;
-    }
+    //if (pDataStoreName.toLowerCase().equals(HBASE_STORE)){
+    //  return HBaseStore.class;
+   // }
     //if (pDataStoreName == "DynamoDB"){
       //  return DynamoDBStore.class;
     //}
